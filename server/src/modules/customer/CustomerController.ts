@@ -9,9 +9,7 @@ class CustomerController {
         const newTask = new CustomerModel(req.body);
         try {
             const result = await newTask.save();
-            return res.status(201).send({
-                data: result.toJSON(),
-            } as ResponseModel);
+            return res.sendStatus(201);
         } catch (error: any) {
             return next({
                 success: false,
@@ -51,13 +49,14 @@ class CustomerController {
                 StatusCode: 400
             } as ResponseModel);
         }
+        // Find the matching customer
         const result = await CustomerModel.find({ _id: customerId });
+        // If there is no such customer then return NotFound
         if (typeof result !== 'undefined' && result.length === 0) {
             res.sendStatus(404);
         }
         return res.status(200).send({
             success: true,
-            message: CustomerConstants.FETCH_CUSTOMER_SUCCESS,
             data: result
         } as ResponseModel);
     };
@@ -100,14 +99,34 @@ class CustomerController {
                     StatusCode: 400
                 } as ResponseModel);
             }
+            // Find the customer to be deleted in the collection.
             const customer = await CustomerModel.findById({ _id: customerId });
+            // If there is no such customer, return an error response
+            // with status code 404 (Not Found)
             if (customer === null) {
                 return res.sendStatus(404);
             }
+            // Remove the customer from the collection
+            // The deleteOne method returns, it returns an object with the property 
+            // deletedCount indicating how many documents were deleted
+            // was successfully deleted
+            const result = await CustomerModel.deleteOne({ _id: customerId });
+            if (result.deletedCount > 0) {
+                // Return a response message with status code 204 (No Content)
+                // To indicate that the operation was successful
+                return res.sendStatus(204);
+            } else {
+                // Otherwise return a 400 (Bad Request) error response
+                return res.status(400).send({
+                    success: false,
+                    message: "Customer Not Deleted",
+                    StatusCode: 400
+                } as ResponseModel);
+            }
 
-            await CustomerModel.deleteOne({ _id: customerId });
-            return res.sendStatus(204);
         } catch (error: any) {
+            // If an uncaught exception occurs, return an error response
+            // with status code 500 (Internal Server Error)
             return next(error);
         }
     }

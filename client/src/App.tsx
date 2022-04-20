@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import './App.css';
 import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from './redux/Hooks';
@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Add from '@mui/icons-material/Add';
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import AddCustomerSideBar from './pages/AddCustomer';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First Name', width: 150, },
@@ -46,32 +47,38 @@ function App(): React.ReactElement {
     setState({ field: newModel.field, sortOrder: newModel.sort as string });
   };
 
+  const [toggleCustomerSideBar, setToggleCustomerSideBar] = useState(false);
   return (
-    <Grid container spacing={2} padding={10}>
-      <Grid item md={8}>
-        <SearchBar />
+    <div>
+      <Grid container spacing={2} padding={10}>
+        <Grid item md={8}>
+          <SearchBar />
+        </Grid>
+        <Grid item md={4}>
+          <Stack spacing={2} direction="row">
+            <Button variant="outlined" startIcon={<Add />} onClick={() => setToggleCustomerSideBar(true)} />
+            <Button variant="outlined" startIcon={<FilterAltIcon />} />
+          </Stack>
+        </Grid>
+        <Grid item md={12}>
+          <div style={{ height: 500, width: '100%' }}>
+            {
+              customers.length > 0 && <DataGrid rows={customers} columns={columns}
+                sortingOrder={['asc', 'desc']}
+                sortingMode="server"
+                sortModel={sortModel}
+                pageSize={state?.perPage}
+                rowsPerPageOptions={[5, 10, 20]}
+                onPageSizeChange={(newPageSize) => setState({ perPage: newPageSize })}
+                onSortModelChange={handleSortModelChange} />
+            }
+          </div>
+        </Grid>
       </Grid>
-      <Grid item md={4}>
-        <Stack spacing={2} direction="row">
-          <Button variant="outlined" startIcon={<Add />} />
-          <Button variant="outlined" startIcon={<FilterAltIcon />} />
-        </Stack>
-      </Grid>
-      <Grid item md={12}>
-        <div style={{ height: 500, width: '100%' }}>
-          {
-            customers.length > 0 && <DataGrid rows={customers} columns={columns}
-              sortingOrder={['asc', 'desc']}
-              sortingMode="server"
-              sortModel={sortModel}
-              pageSize={state?.perPage}
-              rowsPerPageOptions={[5, 10, 20]}
-              onPageSizeChange={(newPageSize) => setState({ perPage: newPageSize })}
-              onSortModelChange={handleSortModelChange} />
-          }
-        </div>
-      </Grid>
-    </Grid>
+      <AddCustomerSideBar
+        toggleCustomerSideBar={toggleCustomerSideBar}
+        setToggleCustomerSideBar={setToggleCustomerSideBar} />
+    </div>
   );
 }
 
