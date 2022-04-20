@@ -6,9 +6,10 @@ import mongoose from "mongoose";
 
 class CustomerController {
     add = async (req: Request, res: Response, next: NextFunction) => {
-        const newTask = new CustomerModel(req.body);
+        console.log(req.body.data)
+        const newTask = new CustomerModel(req.body.data);
         try {
-            const result = await newTask.save();
+            await newTask.save();
             return res.sendStatus(201);
         } catch (error: any) {
             return next({

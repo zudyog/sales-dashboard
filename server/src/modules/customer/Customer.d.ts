@@ -6,4 +6,5 @@ export interface Customer extends mongoose.Document {
     lastName: string;
     email: string;
     gender: string;
+    createdOn: Date;
 }

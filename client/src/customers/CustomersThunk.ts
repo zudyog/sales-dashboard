@@ -14,7 +14,7 @@ export const getCustomersThunk = createAsyncThunk('customers/getAll', async (bod
     }
 });
 
-export const AddCustomerThunk = createAsyncThunk('customers/add', async (bodyParams: CustomersType, thunkApi) => {
+export const addCustomerThunk = createAsyncThunk('customers/add', async (bodyParams: CustomersType, thunkApi) => {
     try {
         const result = await httpClient.postApi<Array<CustomersType>, CustomersType>(CustomersConstant.CUSTOMERS, bodyParams);
         return result.data as Array<CustomersType>;

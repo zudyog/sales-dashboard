@@ -17,5 +17,6 @@ export interface CustomersRequestType {
 export interface CustomersState {
     customers: Array<CustomersType>;
     loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+    customer: CustomersType;
 }
 

@@ -11,6 +11,10 @@ import IconButton from '@mui/material/IconButton';
 import { Close } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import MenuItem from '@mui/material/MenuItem';
+import { useAppDispatch } from '../redux/Hooks';
+import { addCustomerThunk } from '../customers/CustomersThunk';
+import { CustomersType } from '../customers/Customers';
 
 export interface AddCustomerProps {
     toggleCustomerSideBar: boolean;
@@ -18,6 +22,7 @@ export interface AddCustomerProps {
 }
 
 export default function AddCustomerSideBar(props: AddCustomerProps) {
+    const dispatch = useAppDispatch();
     const { toggleCustomerSideBar, setToggleCustomerSideBar } = props;
 
     const validationSchema = yup.object({
@@ -45,8 +50,7 @@ export default function AddCustomerSideBar(props: AddCustomerProps) {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log("log")
-            alert(JSON.stringify(values, null, 2));
+            dispatch(addCustomerThunk(values as CustomersType));
         },
     });
 
@@ -126,7 +130,7 @@ export default function AddCustomerSideBar(props: AddCustomerProps) {
                                 error={formik.touched.email && Boolean(formik.errors.email)}
                                 helperText={formik.touched.email && formik.errors.email}
                             />
-                            <TextField
+                            <TextField select
                                 fullWidth
                                 id="gender"
                                 name="gender"
@@ -135,7 +139,11 @@ export default function AddCustomerSideBar(props: AddCustomerProps) {
                                 onChange={formik.handleChange}
                                 error={formik.touched.gender && Boolean(formik.errors.gender)}
                                 helperText={formik.touched.gender && formik.errors.gender}
-                            />
+                            >
+                                <MenuItem value="Female">Female</MenuItem>
+                                <MenuItem value="Male">Male</MenuItem>
+                                <MenuItem value="Genderfluid">Genderfluid</MenuItem>
+                            </TextField>
                         </CardContent>
                         <CardActions>
                             <Button variant="contained" onClick={() => {

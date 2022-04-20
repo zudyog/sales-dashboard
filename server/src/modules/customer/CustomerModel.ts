@@ -17,7 +17,6 @@ class BaseSchema<T> extends Schema<T> {
 }
 
 const CustomersSchema = new BaseSchema<Customer>({
-    // id: { type: String },
     firstName: {
         type: String,
         required: true
@@ -33,6 +32,10 @@ const CustomersSchema = new BaseSchema<Customer>({
     gender: {
         type: String,
         required: true
+    },
+    createdOn: {
+        type: Date,
+        default: new Date(),
     },
 });
 

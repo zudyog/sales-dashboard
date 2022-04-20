@@ -5,6 +5,7 @@ import { getCustomersThunk } from './CustomersThunk';
 const initialState: CustomersState = {
     customers: [] as CustomersType[],
     loading: 'idle',
+    customer: {} as CustomersType,
 }
 
 
